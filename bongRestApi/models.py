@@ -19,6 +19,17 @@ class Member(models.Model):
         except:
             url = ''
         return url
+    
+    @property
+    def getFollowers(self):
+        followers = self.follow.filter(follower = self).count()
+        return followers
+    
+    @property
+    def getFollowings(self):
+        followings = self.follow.filter(following = self).count()
+        return followings
+    
 
 class Post(models.Model):
     postDate = models.DateTimeField(auto_now=True, auto_now_add=True)
