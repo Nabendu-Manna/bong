@@ -3,9 +3,8 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class Member(models.Model):
+class Profile(models.Model):
     user = models.OneToOneField(User, null = True, blank= True, on_delete=models.CASCADE)
-    admin = models.BooleanField(default = False)
     userName = models.CharField(max_length=200, null=True)
     image = models.ImageField(null=True, blank=True)
     
@@ -22,23 +21,20 @@ class Member(models.Model):
     
     @property
     def getFollowers(self):
-        followers = self.follow.filter(follower = self).count()
+        followers = self.follow.filter(follower = self.user).count()
         return followers
     
     @property
     def getFollowings(self):
-        followings = self.follow.filter(following = self).count()
+        followings = self.follow.filter(following = self.user).count()
         return followings
 
 class Post(models.Model):
-    postDate = models.DateTimeField(auto_now=True, auto_now_add=True)
-    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    postDate = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     image = models.ImageField()
     description = models.CharField(max_length=200, blank=True, null=True)
-    # like = models.IntegerField(default = 0, null=True, blank = True)
-    # dislike = models.IntegerField(default = 0, null=True, blank = True)
-    # share = models.IntegerField(default = 0, null=True, blank = True)
 
     def __str__(self):
         return self.name
@@ -72,52 +68,36 @@ class Post(models.Model):
         return shares
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    member = models.ForeignKey(Member, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now=True, auto_now_add=True)
+    post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
     text = models.CharField(max_length=150, blank=True, null=True)
-
-    # class Meta:
-    #     verbose_name = _("Comment")
-    #     verbose_name_plural = _("Comments")
 
     def __str__(self):
         return self.text
 
-    # def get_absolute_url(self):
-    #     return reverse("Comment_detail", kwargs={"pk": self.pk})
-
 class Like(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     status = models.BooleanField(default = False)  #True for like and False for dislike
-    date = models.DateTimeField(auto_now=True, auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.status
 
 class Share(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    member = models.ForeignKey(Member, on_delete=models.CASCADE)
-    media = models.models.CharField(max_length=50, default = False)
-    date = models.DateTimeField(auto_now=True, auto_now_add=True)
-    
-
-    # class Meta:
-    #     verbose_name = _("Share")
-    #     verbose_name_plural = _("Shares")
+    post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    media = models.CharField(max_length=50, default = False)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.media
 
-    # def get_absolute_url(self):
-    #     return reverse("Share_detail", kwargs={"pk": self.pk})
-
 class Follow(models.Model):
-    follower = models.OneToOneField(Member, on_delete=models.CASCADE)
-    following = models.OneToOneField(Member, on_delete=models.CASCADE)
-    Synergy = models.IntegerField(default = 0)
-
+    user = models.ForeignKey(User, null=True, blank=True, related_name = 'user', on_delete=models.CASCADE)
+    followUser = models.ForeignKey(User, null=True, blank=True, related_name = 'followUser', on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    
     def __str__(self):
-        return self.name
-
+        return self.date
