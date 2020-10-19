@@ -3,8 +3,9 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class Profile(models.Model):
+class UserProfile(models.Model):
     user = models.OneToOneField(User, null = True, blank= True, on_delete=models.CASCADE)
+    admin = models.BooleanField(default = False)
     userName = models.CharField(max_length=200, null=True)
     image = models.ImageField(null=True, blank=True)
     
@@ -31,7 +32,7 @@ class Profile(models.Model):
 
 class Post(models.Model):
     postDate = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    userProfile = models.ForeignKey(UserProfile, null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     image = models.ImageField()
     description = models.CharField(max_length=200, blank=True, null=True)
@@ -69,7 +70,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    userProfile = models.ForeignKey(UserProfile, null=True, blank=True, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     text = models.CharField(max_length=150, blank=True, null=True)
 
@@ -78,7 +79,7 @@ class Comment(models.Model):
 
 class Like(models.Model):
     post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    userProfile = models.ForeignKey(UserProfile, null=True, blank=True, on_delete=models.CASCADE)
     status = models.BooleanField(default = False)  #True for like and False for dislike
     date = models.DateTimeField(auto_now_add=True)
 
@@ -87,7 +88,7 @@ class Like(models.Model):
 
 class Share(models.Model):
     post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    userProfile = models.ForeignKey(UserProfile, null=True, blank=True, on_delete=models.CASCADE)
     media = models.CharField(max_length=50, default = False)
     date = models.DateTimeField(auto_now_add=True)
 
@@ -95,8 +96,8 @@ class Share(models.Model):
         return self.media
 
 class Follow(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True, related_name = 'user', on_delete=models.CASCADE)
-    followUser = models.ForeignKey(User, null=True, blank=True, related_name = 'followUser', on_delete=models.CASCADE)
+    userProfile = models.ForeignKey(UserProfile, null=True, blank=True, related_name = 'userProfile', on_delete=models.CASCADE)
+    followUser = models.ForeignKey(UserProfile, null=True, blank=True, related_name = 'followUser', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
