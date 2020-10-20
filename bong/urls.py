@@ -14,8 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+from django.conf.urls import url
+from rest_framework import routers
+from bongRestApi import views
+
+router = routers.DefaultRouter()
+router.register('usersProfile', views.UserProfileList)
+# router.register(r'groups', views.GroupViewSet)
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(r'^admin/', admin.site.urls),
+    path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    # path(r'^userProfile/', views.UserProfile.as_view()),
 ]

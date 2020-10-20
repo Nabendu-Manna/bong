@@ -5,9 +5,9 @@ from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, null = True, blank= True, on_delete=models.CASCADE)
-    admin = models.BooleanField(default = False)
     userName = models.CharField(max_length=200, null=True)
     image = models.ImageField(null=True, blank=True)
+    admin = models.BooleanField(default = False)
     
     def __str__(self):
         return self.userName
@@ -21,12 +21,12 @@ class UserProfile(models.Model):
         return url
     
     @property
-    def getFollowers(self):
+    def followers(self):
         followers = self.follow.filter(follower = self.user).count()
         return followers
     
     @property
-    def getFollowings(self):
+    def followings(self):
         followings = self.follow.filter(following = self.user).count()
         return followings
 
