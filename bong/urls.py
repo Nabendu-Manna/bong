@@ -20,13 +20,17 @@ from rest_framework import routers
 from bongRestApi import views
 
 router = routers.DefaultRouter()
-router.register('usersProfile', views.UserProfileList)
+# router.register('usersProfile', views.UserProfileList)
 # router.register(r'groups', views.GroupViewSet)
 
 
 urlpatterns = [
-    path(r'^admin/', admin.site.urls),
+    
+    path(r'admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('bongRestApi/', include('bongRestApi.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
     # path(r'^userProfile/', views.UserProfile.as_view()),
 ]
+
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
