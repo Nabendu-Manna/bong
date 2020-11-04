@@ -9,6 +9,7 @@ class UserProfile(models.Model):
     image = models.ImageField(null=True, blank=True)
     admin = models.BooleanField(default = False)
     
+    
     def __str__(self):
         return self.userName
     
@@ -102,3 +103,4 @@ class Follow(models.Model):
     
     def __str__(self):
         return self.date
+

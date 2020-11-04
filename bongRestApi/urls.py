@@ -5,8 +5,10 @@ from django.conf.urls import url
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register('usersProfile', views.UserProfileList)
+router.register('userProfile', views.UserProfileList)
 router.register('post', views.PostList)
+router.register('comment', views.CommentList)
+router.register('like', views.LikeList)
 
 
 urlpatterns = [
